@@ -1,2 +1,2 @@
-ll | awk -F' ' '{print ""$9""}'
+ll | awk -F' ' '{print ""$9""}' >> list.txt
 寻找当前文件夹文件
