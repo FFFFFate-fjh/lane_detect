@@ -1,0 +1,421 @@
+#include "StdAfx.h"
+#include "calc.h"
+
+#define  MAX(a, b)  a > b ? a:b 
+#define  MIN(a, b)  a < b ? a:b 
+
+
+#define PTR_FREE(ptr)\
+{\
+	if ((NULL) != (ptr))\
+	{\
+		free(ptr);\
+		ptr = NULL;\
+	}\
+}
+
+#define IF_PTR_NULL(ptr, result)\
+{\
+	if ((NULL) == (ptr))\
+	{\
+		printf("%s:%d [%s] ",__FILE__,__LINE__,__FUNCTION__);\
+		printf("NULL == ptr \n");\
+		return result;\
+	}\
+}
+
+struct CrossPoint  
+{  
+	Line *line;  
+	int x;
+	int y;
+	double sad;
+};  
+
+void get_lint_para(Line &l)  
+{  
+	l.a=l.p1.y-l.p2.y;  
+	l.b=l.p2.x-l.p1.x;  
+	l.c=l.p1.x*l.p2.y-l.p1.y*l.p2.x;  
+}  
+
+bool get_cross_point(Line &l1,Line &l2,CrossPoint &p)  
+{  
+	get_lint_para(l1);  
+	get_lint_para(l2);  
+	double D=l1.a*l2.b-l2.a*l1.b;  
+
+	if (0 == D)
+	{
+		return false;
+	}
+	
+	p.x=(l1.b*l2.c-l2.b*l1.c)/D;    
+	p.y=(l1.c*l2.a-l2.c*l1.a)/D;  
+
+	return true;   
+}  
+
+int array_point(CrossPoint pair[],int p,int r)
+{     
+	int e=rand()%(r-p+1)+p;     
+	CrossPoint tem;     
+	tem=pair[e];     
+	pair[e]=pair[r];    
+	pair[r]=tem;    
+	double x=pair[r].x;
+	int i=p-1;   
+
+	for (int j=p;j<r;j++)
+	{         
+		if (pair[j].x <= x)
+		{   
+			tem=pair[i+1]; 
+			pair[i+1]=pair[j];      
+			pair[j]=tem;    
+			i++;       
+		}   
+	}   
+
+	tem=pair[r];  
+	pair[r]=pair[i+1];  
+	pair[i+1]=tem;   
+
+	return i+1; 
+}   
+
+void point_quick_sort(CrossPoint pair[],int p,int r)
+{     
+	if (p<r)
+	{        
+		int q=array_point(pair,p,r);       
+		point_quick_sort(pair,p,q-1);  
+		point_quick_sort(pair,q+1,r);    
+	}
+}   
+
+
+IplImage* meanshift_filter(IplImage* img)
+{
+	IplImage* rgb = cvCreateImage(cvSize(img->width,img->height),img->depth,3);
+	cvPyrMeanShiftFiltering(img,rgb,2,40,2);
+	return rgb;
+}
+
+double cal_block(IplImage * src, CvPoint pointA,CvPoint pointB,int size)//size用奇数
+{
+	double sum = 0;
+	CvScalar temp1;
+	CvScalar temp2;
+
+	int m,n,m2,n2;
+	m = pointA.x - size/2;
+	n = pointA.y - size/2;
+
+	m2 = pointB.x - size/2;
+	n2 = pointB.y - size/2;
+
+	for (int i=0;i<size;i++)
+	{
+		for (int j=0;j<size;j++)
+		{
+			temp1 = cvGet2D(src,(n + j), (m + i));
+			temp2 = cvGet2D(src,(n2 + j), (m2 + i));
+
+			sum = sum + powf(fabsf(temp1.val[0] - temp2.val[0] ), 2);
+		}
+	}
+
+	sum = 1.0 * sum /size * size;
+	sum = sqrtf(sum);
+	return sum;
+}
+
+
+bool find_road_line(IplImage * src, IplImage *dst,IplImage *color_dst,CvPoint center,Line * pLines,Line scalLine, int num)
+{
+	int lineNum = 0;
+	CrossPoint * pPoints = NULL;
+	pPoints = (CrossPoint *)malloc(num * sizeof(CrossPoint));
+	IF_PTR_NULL(pPoints,false);
+	memset(pPoints,0,(num * sizeof(CrossPoint)));
+	double sad = cal_block(src, center,center,3);
+
+	CrossPoint * temp = pPoints;
+	for (int j=0; j< num; j++)
+	{
+		if (true == get_cross_point(pLines[j],scalLine,*temp))
+		{
+			int maxP = MAX(pLines[j].p1.x,pLines[j].p2.x);
+			int minP = MIN(pLines[j].p1.x,pLines[j].p2.x);
+
+			if ((temp->x < maxP)
+				&& (temp->x > minP))
+			{
+				temp->line = &pLines[j];
+				//cvLine(src,cvPoint(temp->x,temp->y + 3),cvPoint(temp->x,temp->y),CV_RGB(0,0,0),1,CV_AA);
+				cvCircle(color_dst,cvPoint(temp->x,temp->y),4,CV_RGB(0,255,255),2,8,0);
+				lineNum ++;
+				temp++;
+			}
+
+		}
+	}
+	
+	point_quick_sort(pPoints,0,(lineNum-1)); 
+
+	Line *maxLine1 = NULL,*maxLine2 = NULL;
+	double sadMax=0,MaxSad = 0; 
+	maxLine1 = pPoints[0].line;
+
+	for (int j=0; j< lineNum; j++)
+	{
+		sad = cal_block(src, center,cvPoint(pPoints[j].x,pPoints[j].y),3);
+		pPoints[j].sad = sad;
+
+		if (sad > sadMax)
+		{
+			maxLine1 = pPoints[j].line;
+			sadMax = sad;
+		}
+		printf("val %f,",cvGet2D(src,pPoints[j].y,pPoints[j].x).val[0]);
+		printf("sad %f **cvCircle: %d, %d  MAX %d MIN %d \n",sad,pPoints[j].x,pPoints[j].y,MAX(pLines[j].p1.x,pLines[j].p2.x), MIN(pLines[j].p1.x,pLines[j].p2.x));
+	}
+
+	MaxSad = 0; 
+	maxLine2 = maxLine1;
+
+	for (int j=0; j< lineNum; j++)
+	{
+		if ((pPoints[j].sad > MaxSad) && (pPoints[j].sad != sadMax))
+		{
+			maxLine2 = pPoints[j].line;
+			MaxSad = sad;
+		}
+	}
+
+	if (NULL != maxLine1)
+	{
+		maxLine1->roadVal ++;
+	}
+
+	if (NULL != maxLine2)
+	{
+		maxLine2->roadVal ++;
+	}
+
+	PTR_FREE(pPoints);
+	return true;
+}
+
+
+CvPoint half_point(CvPoint pointA, CvPoint pointB)
+{
+	CvPoint point;
+	point.x = (pointA.x + pointB.x)/2;
+	point.y = (pointA.y + pointB.y)/2;
+
+	return point;
+}
+
+int main(void)
+{
+	IplConvKernel *element = 0;//声明一个结构元素  
+	element = cvCreateStructuringElementEx( 4, 4, 1, 1, CV_SHAPE_ELLIPSE, 0);
+	//IplImage * src = cvLoadImage("D:\\users\\w\\Projects\\hough\\Debug\\road.png",0);
+	IplImage * img = cvLoadImage("road2.png",1);
+	IplImage * src = cvCreateImage(cvGetSize(img),8,1);
+	cvCvtColor(img,src,CV_BGR2GRAY);
+	if (src)
+	{
+		IplImage *dst = cvCreateImage(cvGetSize(src),8,1);
+		IplImage *color_dst = cvCreateImage(cvGetSize(src),8,3);
+		CvMemStorage *storage = cvCreateMemStorage();
+		CvSeq *lines = 0;
+		int i ;
+		cvCanny(src,dst,50,200,3);
+
+		cvCvtColor(dst,color_dst,CV_GRAY2BGR);
+#if 0
+		lines = cvHoughLines2(dst,storage,CV_HOUGH_STANDARD,1,CV_PI/180,150,0,0);
+
+		for (i=0;i<lines->total;i++)
+		{
+			float *line = (float *)cvGetSeqElem(lines,i);
+			float rho = line[0];
+			float theta = line[1];
+			CvPoint pt1,pt2;
+			double a = cos(theta);
+			double b = sin(theta);
+			if (fabs(a)<0.001)
+			{
+				pt1.x = pt2.x = cvRound(rho);
+				pt1.y = 0;
+				pt2.y = color_dst->height;
+			}
+			else if (fabs(b)<0.001)
+			{
+				pt1.y = pt2.y = cvRound(rho);
+				pt1.x = 0;
+				pt2.x = color_dst->width;
+			}
+			else
+			{
+				pt1.x = 0;
+				pt1.y = cvRound(rho/b);
+				pt2.x = cvRound(rho/a);
+				pt2.y = 0;
+			}
+
+			cvLine(color_dst,pt1,pt2,CV_RGB(255,0,0),1,8);
+		}
+#else
+		//cvDilate(dst,dst,element,1);//膨胀图像  
+
+		//cvThin( dst, dst, 3 );
+		//cvErode( dst, dst, element, 3);
+
+
+		lines = cvHoughLines2(dst,storage,CV_HOUGH_PROBABILISTIC,1,CV_PI/180,80,30,5);
+		Line * angleFilt = hough_link_list_creat(lines->total, lines);
+
+		//创建链表
+		angleFilt = angleThresh(angleFilt, 75);
+		angleFilt = linklenthSort(angleFilt);
+		
+		Line * pTemp = angleFilt;
+		int lineNum = MIN(listLengGet(angleFilt),10);
+		Line * pLines = NULL;
+		
+		pLines = (Line *)malloc(lineNum * sizeof(Line));
+		IF_PTR_NULL(pLines,-1);
+		memset(pLines,0,(lineNum * sizeof(Line)));
+		
+		CvPoint center;
+		center = cvPoint(src->width/1.8,src->height/1.5);
+		int positionMax,positionMin;
+
+		cvCircle(img,center,4,CV_RGB(0,255,255),1,8,0);
+		printf("center val %f,",cvGet2D(src,center.y,center.x).val[0]);
+
+		for (int j=0; j< lineNum; j++)
+		{
+			cvLine(color_dst,pTemp->p1,pTemp->p2,CV_RGB(255,255,0),1,CV_AA);
+			printf("lenth == : %f \n",pTemp->lenth);
+
+			pLines[j].p1 = pTemp->p1;
+			pLines[j].p2 = pTemp->p2;
+			
+			if ((pTemp->angle < 180) || (180 == pTemp->angle))
+			{
+				pLines[j].angle = pTemp->angle;
+			}
+			else 
+			{
+				pLines[j].angle = pTemp->angle - 180;
+			}
+
+			if(half_point(pLines[j].p1, pLines[j].p2).x < center.x)
+			{
+				pLines[j].lefOrright = 0;
+			}
+			else
+			{
+				pLines[j].lefOrright = 1;
+			}
+			pTemp = pTemp->next;
+		}
+
+		//扫描
+		Line scalLine;
+
+		//	scalLine.p1 = cvPoint(0,center.y);
+		//	scalLine.p2 = cvPoint(src->width,center.y);
+		//	cvLine(color_dst,cvPoint(0,center.y),cvPoint(src->width,center.y),CV_RGB(255,255,255),2,CV_AA);
+		//find_road_line(src,dst,color_dst,center,pLines,scalLine, lineNum);
+		for(int i=0;i<src->height;i++)
+		{
+			scalLine.p1 = cvPoint(0,i);
+			scalLine.p2 = cvPoint(src->width,i);
+
+			find_road_line(src,dst,color_dst,center,pLines,scalLine, lineNum);
+		}
+
+		Line *maxLine1 = NULL,*maxLine2 = NULL;
+		double valMax1=0,valMax2 = 0; 
+
+		for (int j=0; j< lineNum; j++)
+		{
+			if ((pLines[j].roadVal > valMax1) && (0 == pLines[j].lefOrright))
+			{
+				maxLine1 = &pLines[j];
+				valMax1 = pLines[j].roadVal;
+			}
+
+			if ((pLines[j].roadVal > valMax2) && (1 == pLines[j].lefOrright))
+			{
+				maxLine2 = &pLines[j];
+				valMax2 = pLines[j].roadVal;
+			}
+						
+		}
+
+		Line line1,line2,line3;
+		line1.p1 = cvPoint(0,0);
+		line1.p2 = cvPoint(0,src->height);
+		line2.p1 = cvPoint(0,0);
+		line2.p2 = cvPoint(src->width,0);
+		line3.p1 = cvPoint(src->width,0);
+		line3.p2 = cvPoint(src->width,src->height);
+		CrossPoint point1,point2;
+
+		if (NULL != maxLine1)
+		{
+			if ((true == get_cross_point(*maxLine1,line1,point1))
+				&& (true == get_cross_point(*maxLine1,line2,point2)))
+			{
+				//cvLine(color_dst,cvPoint(point1.x,point1.y),cvPoint(point2.x,point2.y),CV_RGB(0,128,192),2,CV_AA);
+				cvLine(img,cvPoint(point1.x,point1.y),cvPoint(point2.x,point2.y),CV_RGB(0,128,192),2,CV_AA);
+			}
+			
+		}
+		if (NULL != maxLine2)
+		{
+			if ((true == get_cross_point(*maxLine2,line3,point1))
+				&& (true == get_cross_point(*maxLine2,line2,point2)))
+			{
+				//cvLine(color_dst,cvPoint(point1.x,point1.y),cvPoint(point2.x,point2.y),CV_RGB(0,128,192),2,CV_AA);
+				cvLine(img,cvPoint(point1.x,point1.y),cvPoint(point2.x,point2.y),CV_RGB(0,128,192),2,CV_AA);
+			}
+		}
+
+		PTR_FREE(pLines);
+
+#endif
+		cvNamedWindow("img");
+		cvShowImage("img",img);
+
+		cvNamedWindow("Source");
+		cvShowImage("Source",src);
+
+		cvNamedWindow("Hough");
+		cvShowImage("Hough",color_dst);
+
+		cvSaveImage("img.jpg",img);
+		cvSaveImage("src.jpg",src);
+		cvSaveImage("dst.jpg",dst);
+		cvSaveImage("color_dst.jpg",color_dst);
+
+		cvWaitKey(0);
+
+		cvReleaseImage(&img);
+		cvReleaseImage(&src);
+		cvReleaseImage(&dst);
+		cvReleaseImage(&color_dst);
+		cvReleaseMemStorage(&storage);
+
+		cvDestroyAllWindows();
+
+		return 1;
+	}
+}

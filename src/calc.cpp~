@@ -1,0 +1,555 @@
+#include "StdAfx.h"
+#include "calc.h"
+
+#define IF_PTR_NULL(ptr, result)\
+{\
+	if ((NULL) == (ptr))\
+	{\
+	printf("%s:%d [%s] ",__FILE__,__LINE__,__FUNCTION__);\
+	printf("NULL == ptr \n");\
+	return result;\
+	}\
+}
+
+
+void cvThin( IplImage* src, IplImage* dst, int iterations)
+{
+	CvSize size = cvGetSize(src);
+
+	cvCopy(src, dst);
+	int n = 0,i = 0,j = 0;
+	for(n=0; n<iterations; n++)
+	{
+		IplImage* t_image = cvCloneImage(dst);
+		for(i=0; i<size.height;  i++)
+		{
+			for(j=0; j<size.width; j++)
+			{
+				if(CV_IMAGE_ELEM(t_image,uchar,i,j)==1)
+				{
+					int ap=0;
+					int p2 = (i==0)?0:CV_IMAGE_ELEM(t_image,uchar, i-1, j);
+					int p3 = (i==0 || j==size.width-1)?0:CV_IMAGE_ELEM(t_image,uchar, i-1, j+1);
+					if (p2==0 && p3==1)
+					{
+						ap++;
+					}
+					int p4 = (j==size.width-1)?0:CV_IMAGE_ELEM(t_image,uchar,i,j+1);
+					if(p3==0 && p4==1)
+					{
+						ap++;
+					}
+					int p5 = (i==size.height-1 || j==size.width-1)?0:CV_IMAGE_ELEM(t_image,uchar,i+1,j+1);
+					if(p4==0 && p5==1)
+					{
+						ap++;
+					}
+					int p6 = (i==size.height-1)?0:CV_IMAGE_ELEM(t_image,uchar,i+1,j);
+					if(p5==0 && p6==1)
+					{
+						ap++;
+					}
+					int p7 = (i==size.height-1 || j==0)?0:CV_IMAGE_ELEM(t_image,uchar,i+1,j-1);
+					if(p6==0 && p7==1)
+					{
+						ap++;
+					}
+					int p8 = (j==0)?0:CV_IMAGE_ELEM(t_image,uchar,i,j-1);
+					if(p7==0 && p8==1)
+					{
+						ap++;
+					}
+					int p9 = (i==0 || j==0)?0:CV_IMAGE_ELEM(t_image,uchar,i-1,j-1);
+					if(p8==0 && p9==1)
+					{
+						ap++;
+					}
+					if(p9==0 && p2==1)
+					{
+						ap++;
+					}
+					if((p2+p3+p4+p5+p6+p7+p8+p9)>1 && (p2+p3+p4+p5+p6+p7+p8+p9)<7)
+					{
+						if(ap==1)
+						{
+							if(!(p2 && p4 && p6))
+							{
+								if(!(p4 && p6 && p8)) 
+								{
+									CV_IMAGE_ELEM(dst,uchar,i,j)=0;
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+		cvReleaseImage(&t_image);
+		t_image = cvCloneImage(dst);
+		for(i=0; i<size.height;  i++)
+		{
+			for(int j=0; j<size.width; j++)
+			{
+				if(CV_IMAGE_ELEM(t_image,uchar,i,j)==1)
+				{
+					int ap=0;
+					int p2 = (i==0)?0:CV_IMAGE_ELEM(t_image,uchar, i-1, j);
+					int p3 = (i==0 || j==size.width-1)?0:CV_IMAGE_ELEM(t_image,uchar, i-1, j+1);
+					if (p2==0 && p3==1)
+					{
+						ap++;
+					}
+					int p4 = (j==size.width-1)?0:CV_IMAGE_ELEM(t_image,uchar,i,j+1);
+					if(p3==0 && p4==1)
+					{
+						ap++;
+					}
+					int p5 = (i==size.height-1 || j==size.width-1)?0:CV_IMAGE_ELEM(t_image,uchar,i+1,j+1);
+					if(p4==0 && p5==1)
+					{
+						ap++;
+					}
+					int p6 = (i==size.height-1)?0:CV_IMAGE_ELEM(t_image,uchar,i+1,j);
+					if(p5==0 && p6==1)
+					{
+						ap++;
+					}
+					int p7 = (i==size.height-1 || j==0)?0:CV_IMAGE_ELEM(t_image,uchar,i+1,j-1);
+					if(p6==0 && p7==1)
+					{
+						ap++;
+					}
+					int p8 = (j==0)?0:CV_IMAGE_ELEM(t_image,uchar,i,j-1);
+					if(p7==0 && p8==1)
+					{
+						ap++;
+					}
+					int p9 = (i==0 || j==0)?0:CV_IMAGE_ELEM(t_image,uchar,i-1,j-1);
+					if(p8==0 && p9==1)
+					{
+						ap++;
+					}
+					if(p9==0 && p2==1)
+					{
+						ap++;
+					}
+					if((p2+p3+p4+p5+p6+p7+p8+p9)>1 && (p2+p3+p4+p5+p6+p7+p8+p9)<7)
+					{
+						if(ap==1)
+						{
+							if(p2*p4*p8==0)
+							{
+								if(p2*p6*p8==0)
+								{
+									CV_IMAGE_ELEM(dst, uchar,i,j)=0;
+								}
+							}
+						}
+					}                    
+				}
+
+			}
+
+		}            
+		cvReleaseImage(&t_image);
+	}
+
+}
+/************************************************************************
+*函数名：        pointMultiply
+*
+*函数作用：      点和数相乘
+*
+*函数参数：
+*CvPoint2D32f pointO  - 起点
+*float num       - 终点
+*
+*函数返回值：
+*CvPoint2D32f         点和数相乘结果
+**************************************************************************/
+CvPoint pointMultiply( CvPoint point,double num )
+{
+	CvPoint pointOut;
+
+	pointOut.x = (int)(num * point.x);
+	pointOut.y = (int)(num * point.y);
+
+	return pointOut;
+}
+
+
+/************************************************************************
+*函数名：        pointAdd
+*
+*函数作用：      两点相加
+*
+*函数参数：
+*CvPoint2D32f point1  - 起点
+*CvPoint2D32f point2  - 终点
+*
+*函数返回值：
+*CvPoint2D32f         两点相加结果
+**************************************************************************/
+CvPoint pointAdd( CvPoint point1,CvPoint point2 )
+{
+	CvPoint pointOut;
+
+	pointOut.x = point1.x + point2.x;
+	pointOut.y = point1.y + point2.y;
+
+	return pointOut;
+}
+
+/************************************************************************
+*函数名：        getAngle
+*
+*函数作用：      已知2个坐标点，求从 0------->x 逆时针需旋转多少角度到该位置
+*
+*					|
+*					|
+*					|
+*					|              
+*------------------------------------> x
+*					| 0            
+*					|
+*					|
+*					|
+*                   v
+*					y
+*					
+*函数参数：
+*CvPoint2D32f pointO  - 起点
+*CvPoint2D32f pointA  - 终点
+*
+*函数返回值：
+*double         向量OA，从 0------->x 逆时针需旋转多少角度到该位置
+**************************************************************************/
+double getAngle(CvPoint pointO,CvPoint pointA)
+{
+	double angle = 0;
+	CvPoint point;
+	double temp;
+
+	point = cvPoint((pointA.x - pointO.x), (pointA.y - pointO.y));//pointAdd(pointA,pointMultiply(pointO,-1));
+
+	if ((0==point.x) && (0==point.y))
+	{
+		return 0;
+	}
+
+	if (0==point.x)
+	{
+		angle = 90;
+		return angle;
+	}
+
+	if (0==point.y)
+	{
+		angle = 0;
+		return angle;
+	}
+
+	temp = fabsf(float(point.y)/float(point.x));
+	temp = atan(temp);
+	temp = temp*180/CV_PI ;
+
+	if ((0<point.x)&&(0<point.y))
+	{
+		angle = 360 - temp;
+		return angle;
+	}
+
+	if ((0>point.x)&&(0<point.y))
+	{
+		angle = 360 - (180 - temp);
+		return angle;
+	}
+
+	if ((0<point.x)&&(0>point.y))
+	{
+		angle = temp;
+		return angle;
+	}
+
+	if ((0>point.x)&&(0>point.y))
+	{
+		angle = 180 - temp;
+		return angle;
+	}
+
+	printf("sceneDrawing :: getAngle error!");
+	return -1;
+}
+
+
+/************************************************************************
+*函数名：        getDistance
+*
+*函数作用：      获取两点之间的距离
+*
+*函数参数：
+*CvPoint2D32f pointO  - 起点
+*CvPoint2D32f pointA  - 终点
+*
+*函数返回值：
+*double           两点之间的距离
+**************************************************************************/
+double getDistance (CvPoint pointO,CvPoint pointA )
+{
+	double distance;
+	distance = powf((pointO.x - pointA.x),2) + powf((pointO.y - pointA.y),2);
+	distance = sqrtf(distance);
+
+	return distance;
+}
+
+
+//创建长度为num的链表
+Line * linkListCreat(int num, Line * pcornerPair)
+{
+	Line*head,*p,*s;
+	double ax,ay,bx,by;
+	head=(Line*)malloc(sizeof(Line));
+	IF_PTR_NULL(head,NULL);
+	p=head;	
+	for( int i = 0; i < num; i++ )
+	{
+		s=(Line*)malloc(sizeof(Line));
+		IF_PTR_NULL(s,NULL);
+		*s = pcornerPair[i];
+		p->next=s;
+		p=s;
+	}
+
+	head=head->next;
+	p->next=NULL;
+
+	return(head);
+}
+
+//创建长度为num的链表
+Line * hough_link_list_creat(int num, CvSeq *lines)
+{
+	Line*head,*p,*s;
+	double ax,ay,bx,by;
+	head=(Line*)malloc(sizeof(Line));
+	IF_PTR_NULL(head,NULL);
+	p=head;	
+	for( int i = 0; i < num; i++ )
+	{
+		CvPoint *line = (CvPoint *)cvGetSeqElem(lines,i);
+		s = (Line*)malloc(sizeof(Line));
+		IF_PTR_NULL(s,NULL);
+
+		if (line[0].y > line[1].y)
+		{
+			s->p1  = cvPoint(line[0].x, line[0].y);
+			s->p2  = cvPoint(line[1].x, line[1].y);
+		}
+		else
+		{
+			s->p1  = cvPoint(line[1].x, line[1].y);
+			s->p2  = cvPoint(line[0].x, line[0].y);
+		}
+
+		s->angle   = getAngle(s->p1,s->p2);
+		s->lenth   = getDistance(s->p1,s->p2);
+
+		p->next    = s;
+		p          = s;
+	}
+
+	head=head->next;
+	p->next=NULL;
+
+	return(head);
+}
+
+//删除一个节点，返回剩下的链表首地址
+Line * delnode(Line * h , Line * maxp)      
+{  
+	Line * t;
+
+	if (h==maxp)                         //如果maxp 等于 头
+	{	
+		t= maxp-> next;					 //就把下一个返回
+		free(maxp);
+		maxp = NULL;
+		return t;
+	}
+	else								//否则
+	{   
+		t=h;
+		while(t->next!=maxp ) {t=t->next;}   //找到maxp 的前节点t   
+		t->next = maxp->next ;                //删除maxp，maxp后面的接到t后面
+		free(maxp);
+		maxp = NULL;
+		return h;							  //链首依然是h ,返回
+	}
+}
+
+bool angle_ok(double ang, double angThresh)
+{
+	bool flag = false;
+
+	if (180 ==  ang)
+	{
+		return false;
+	}
+
+	if (180 > ang)
+	{
+		if (fabsf(ang - 90) < angThresh )
+		{
+			flag = true;
+
+		}
+		else
+		{
+			flag = false;
+		}
+	}
+
+	if (180 < ang)
+	{
+		if (fabsf(ang - 270) < angThresh )
+		{
+			flag = true;
+
+		}
+		else
+		{
+			flag = false;
+		}
+	}
+
+	return flag;
+}
+
+Line * angleThresh(Line*head, double angThresh)
+{
+	if (NULL == head)
+	{
+		return NULL;
+	}
+
+	if (NULL == head->next)
+	{
+		if (true == angle_ok(head->angle, angThresh))
+		{
+		}
+		else
+		{
+			head=delnode(head,head);           //删除头节点
+			return NULL;
+		}
+		return head;
+	}
+
+	Line * p = head;
+	Line pBak = *head;
+
+
+	while(NULL != p)
+	{
+
+		if ((int )p->angle == 59)
+		{
+			int k = 0;
+		}
+
+		if (true == angle_ok(p->angle,angThresh))
+		{
+			p = p->next;
+		}
+		else
+		{
+			pBak = * p;
+
+			head = delnode(head,p);      //删除p节点,返回剩下的链表
+			p = pBak.next;
+		}
+	}
+
+	return head;
+}
+
+int listLengGet(Line*head)
+{
+	int n=0;
+	Line *p;
+	p=head;
+	while(p!=NULL)
+	{
+		p=p->next;
+		n++;
+	}
+	return(n);
+}
+
+//删除一个节点，返回剩下的链表首地址
+Line * delNodeForSort(Line * h , Line * maxp)      
+{   
+	Line * t;
+
+	if (h==maxp)                                //如果maxp 等于 头，
+	{	                                        
+		t= maxp-> next;					        //就把下一个返回
+		maxp-> next=NULL;                       
+		return t;                               
+	}                                           
+	else								        //否则
+	{   t=h;
+	while(t->next!=maxp ) {t=t->next;}      //找到maxp 的前节点t   
+	t->next = maxp->next ;                  //删除maxp，maxp后面的接到t后面
+	maxp->next = NULL;                      
+	return h;							    //链首依然是h ,返回
+	}
+}
+
+/************************************************************************
+*函数名：               linklenthSort
+*                       
+*函数作用：             链表排序，按偏移向量的长度排序
+*                       
+*函数参数：             
+*CORNERS * st           - 链表头指针
+*
+*函数返回值：           
+*CORNERS                链表头指针
+**************************************************************************/
+Line * linklenthSort(Line *st)
+{	
+	if(NULL == st)
+	{
+		printf("delnode : NULL == st!");
+		return NULL;
+	}
+
+	Line * h=NULL , *t=NULL, *maxp=NULL, *head=NULL, *end=NULL;	
+	double maxn;
+	h=st;                                       // h ：动态头指针
+
+	while(h !=NULL)                             //只要当前链中不为空就循环
+	{                                           
+		t=h;                                    // t ：临时指针
+		maxn=t->lenth; maxp=t;                  //把当前t中的值作为最大
+		while (t->next !=NULL)                  //只要t后面还有节点就循环
+		{                                       
+			t=t->next ;		    	            //t往后移动一个
+			if (t->lenth> maxn)                 //如果t中的值大于maxn，则记下其值和位置				
+			{	
+				maxn=t->lenth;
+				maxp=t;
+			} 
+		}                                       //找出当前头开始在链中最大节点 maxp
+
+		h=delNodeForSort(h,maxp);               //删除maxp节点,返回剩下的链表
+		maxp->next=NULL;			            //maxp  的下节点设为空
+		if (head==NULL) {head=maxp;end=maxp;}   //第一个就放入头中，并记下尾部位置
+		else {end->next=maxp;end=end->next;}    //非第一个就把maxp接在尾部
+	}                                           //继续循环
+
+	return head;
+}
