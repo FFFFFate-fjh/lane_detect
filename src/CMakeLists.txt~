@@ -5,11 +5,14 @@ FIND_PACKAGE( OpenCV REQUIRED )
 
 # INCLUDE_DIRECTORIES( ${PROJECT_SOURSE_DIR}/include )
 
-ADD_EXECUTABLE( lane_detect lane_detect.cpp )
+ADD_EXECUTABLE( lane_detect lane_detect.cpp 
+MSAC.cpp 	errorNIETO.cpp  lmmin.cpp)
 TARGET_LINK_LIBRARIES( lane_detect ${OpenCV_LIBS} 
  )
 
-ADD_EXECUTABLE( lane_detect_circle lane_detect_circle.cpp )
-TARGET_LINK_LIBRARIES( lane_detect_circle ${OpenCV_LIBS} 
+ADD_EXECUTABLE( lane_detect_circle lane_detect_circle.cpp 
+	MSAC.cpp 	errorNIETO.cpp  lmmin.cpp)
+TARGET_LINK_LIBRARIES( lane_detect_circle 
+${OpenCV_LIBS} 
  )
 

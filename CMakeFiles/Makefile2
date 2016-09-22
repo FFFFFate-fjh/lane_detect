@@ -76,7 +76,7 @@ src/preinstall:
 src/CMakeFiles/lane_detect.dir/all:
 	$(MAKE) -f src/CMakeFiles/lane_detect.dir/build.make src/CMakeFiles/lane_detect.dir/depend
 	$(MAKE) -f src/CMakeFiles/lane_detect.dir/build.make src/CMakeFiles/lane_detect.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles  1
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles  1 2 3 4
 	@echo "Built target lane_detect"
 .PHONY : src/CMakeFiles/lane_detect.dir/all
 
@@ -86,7 +86,7 @@ all: src/CMakeFiles/lane_detect.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/lane_detect.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fung/workspace/lane_detect/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fung/workspace/lane_detect/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/lane_detect.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fung/workspace/lane_detect/CMakeFiles 0
 .PHONY : src/CMakeFiles/lane_detect.dir/rule
@@ -111,7 +111,7 @@ clean: src/CMakeFiles/lane_detect.dir/clean
 src/CMakeFiles/lane_detect_circle.dir/all:
 	$(MAKE) -f src/CMakeFiles/lane_detect_circle.dir/build.make src/CMakeFiles/lane_detect_circle.dir/depend
 	$(MAKE) -f src/CMakeFiles/lane_detect_circle.dir/build.make src/CMakeFiles/lane_detect_circle.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles  2
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles  5 6 7 8
 	@echo "Built target lane_detect_circle"
 .PHONY : src/CMakeFiles/lane_detect_circle.dir/all
 
@@ -121,7 +121,7 @@ all: src/CMakeFiles/lane_detect_circle.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/lane_detect_circle.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/fung/workspace/lane_detect/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/fung/workspace/lane_detect/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/lane_detect_circle.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/fung/workspace/lane_detect/CMakeFiles 0
 .PHONY : src/CMakeFiles/lane_detect_circle.dir/rule

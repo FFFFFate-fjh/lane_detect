@@ -53,15 +53,15 @@ src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o: src/CMakeFiles/lane_detect.dir
 src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o: src/lane_detect.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o"
-	cd /home/fung/workspace/lane_detect/src && g++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/lane_detect.dir/lane_detect.cpp.o -c /home/fung/workspace/lane_detect/src/lane_detect.cpp
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/lane_detect.dir/lane_detect.cpp.o -c /home/fung/workspace/lane_detect/src/lane_detect.cpp
 
 src/CMakeFiles/lane_detect.dir/lane_detect.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detect.dir/lane_detect.cpp.i"
-	cd /home/fung/workspace/lane_detect/src && g++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fung/workspace/lane_detect/src/lane_detect.cpp > CMakeFiles/lane_detect.dir/lane_detect.cpp.i
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fung/workspace/lane_detect/src/lane_detect.cpp > CMakeFiles/lane_detect.dir/lane_detect.cpp.i
 
 src/CMakeFiles/lane_detect.dir/lane_detect.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detect.dir/lane_detect.cpp.s"
-	cd /home/fung/workspace/lane_detect/src && g++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fung/workspace/lane_detect/src/lane_detect.cpp -o CMakeFiles/lane_detect.dir/lane_detect.cpp.s
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fung/workspace/lane_detect/src/lane_detect.cpp -o CMakeFiles/lane_detect.dir/lane_detect.cpp.s
 
 src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o.requires:
 .PHONY : src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o.requires
@@ -72,14 +72,89 @@ src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o.provides: src/CMakeFiles/lane_d
 
 src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o.provides.build: src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o
 
+src/CMakeFiles/lane_detect.dir/MSAC.cpp.o: src/CMakeFiles/lane_detect.dir/flags.make
+src/CMakeFiles/lane_detect.dir/MSAC.cpp.o: src/MSAC.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/CMakeFiles/lane_detect.dir/MSAC.cpp.o"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/lane_detect.dir/MSAC.cpp.o -c /home/fung/workspace/lane_detect/src/MSAC.cpp
+
+src/CMakeFiles/lane_detect.dir/MSAC.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detect.dir/MSAC.cpp.i"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fung/workspace/lane_detect/src/MSAC.cpp > CMakeFiles/lane_detect.dir/MSAC.cpp.i
+
+src/CMakeFiles/lane_detect.dir/MSAC.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detect.dir/MSAC.cpp.s"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fung/workspace/lane_detect/src/MSAC.cpp -o CMakeFiles/lane_detect.dir/MSAC.cpp.s
+
+src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.requires:
+.PHONY : src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.requires
+
+src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.provides: src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.requires
+	$(MAKE) -f src/CMakeFiles/lane_detect.dir/build.make src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.provides.build
+.PHONY : src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.provides
+
+src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.provides.build: src/CMakeFiles/lane_detect.dir/MSAC.cpp.o
+
+src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o: src/CMakeFiles/lane_detect.dir/flags.make
+src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o: src/errorNIETO.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles $(CMAKE_PROGRESS_3)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/lane_detect.dir/errorNIETO.cpp.o -c /home/fung/workspace/lane_detect/src/errorNIETO.cpp
+
+src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detect.dir/errorNIETO.cpp.i"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fung/workspace/lane_detect/src/errorNIETO.cpp > CMakeFiles/lane_detect.dir/errorNIETO.cpp.i
+
+src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detect.dir/errorNIETO.cpp.s"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fung/workspace/lane_detect/src/errorNIETO.cpp -o CMakeFiles/lane_detect.dir/errorNIETO.cpp.s
+
+src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.requires:
+.PHONY : src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.requires
+
+src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.provides: src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.requires
+	$(MAKE) -f src/CMakeFiles/lane_detect.dir/build.make src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.provides.build
+.PHONY : src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.provides
+
+src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.provides.build: src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o
+
+src/CMakeFiles/lane_detect.dir/lmmin.cpp.o: src/CMakeFiles/lane_detect.dir/flags.make
+src/CMakeFiles/lane_detect.dir/lmmin.cpp.o: src/lmmin.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/fung/workspace/lane_detect/CMakeFiles $(CMAKE_PROGRESS_4)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/CMakeFiles/lane_detect.dir/lmmin.cpp.o"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/lane_detect.dir/lmmin.cpp.o -c /home/fung/workspace/lane_detect/src/lmmin.cpp
+
+src/CMakeFiles/lane_detect.dir/lmmin.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lane_detect.dir/lmmin.cpp.i"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/fung/workspace/lane_detect/src/lmmin.cpp > CMakeFiles/lane_detect.dir/lmmin.cpp.i
+
+src/CMakeFiles/lane_detect.dir/lmmin.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lane_detect.dir/lmmin.cpp.s"
+	cd /home/fung/workspace/lane_detect/src && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/fung/workspace/lane_detect/src/lmmin.cpp -o CMakeFiles/lane_detect.dir/lmmin.cpp.s
+
+src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.requires:
+.PHONY : src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.requires
+
+src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.provides: src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.requires
+	$(MAKE) -f src/CMakeFiles/lane_detect.dir/build.make src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.provides.build
+.PHONY : src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.provides
+
+src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.provides.build: src/CMakeFiles/lane_detect.dir/lmmin.cpp.o
+
 # Object files for target lane_detect
 lane_detect_OBJECTS = \
-"CMakeFiles/lane_detect.dir/lane_detect.cpp.o"
+"CMakeFiles/lane_detect.dir/lane_detect.cpp.o" \
+"CMakeFiles/lane_detect.dir/MSAC.cpp.o" \
+"CMakeFiles/lane_detect.dir/errorNIETO.cpp.o" \
+"CMakeFiles/lane_detect.dir/lmmin.cpp.o"
 
 # External object files for target lane_detect
 lane_detect_EXTERNAL_OBJECTS =
 
 bin/lane_detect: src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o
+bin/lane_detect: src/CMakeFiles/lane_detect.dir/MSAC.cpp.o
+bin/lane_detect: src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o
+bin/lane_detect: src/CMakeFiles/lane_detect.dir/lmmin.cpp.o
 bin/lane_detect: src/CMakeFiles/lane_detect.dir/build.make
 bin/lane_detect: /usr/local/lib/libopencv_videostab.so.2.4.13
 bin/lane_detect: /usr/local/lib/libopencv_video.so.2.4.13
@@ -123,6 +198,9 @@ src/CMakeFiles/lane_detect.dir/build: bin/lane_detect
 .PHONY : src/CMakeFiles/lane_detect.dir/build
 
 src/CMakeFiles/lane_detect.dir/requires: src/CMakeFiles/lane_detect.dir/lane_detect.cpp.o.requires
+src/CMakeFiles/lane_detect.dir/requires: src/CMakeFiles/lane_detect.dir/MSAC.cpp.o.requires
+src/CMakeFiles/lane_detect.dir/requires: src/CMakeFiles/lane_detect.dir/errorNIETO.cpp.o.requires
+src/CMakeFiles/lane_detect.dir/requires: src/CMakeFiles/lane_detect.dir/lmmin.cpp.o.requires
 .PHONY : src/CMakeFiles/lane_detect.dir/requires
 
 src/CMakeFiles/lane_detect.dir/clean:
